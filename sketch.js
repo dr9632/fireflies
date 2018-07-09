@@ -8,7 +8,7 @@
 // https://p5js.org/examples/simulate-particle-system.html
 // https://p5js.org/examples/simulate-multiple-particle-systems.html
 
-var bgImg;
+var bgImg, bgSound;
 
 var fSize = 800;
 var fImg, f;
@@ -21,6 +21,7 @@ var maxP = 20;
 
 function preload() {
 	bgImg = loadImage('assets/img/bg.jpg');
+	bgSound = loadSound('assets/audio/amb.mp3');
 }
 
 function setup() {
@@ -28,6 +29,9 @@ function setup() {
 	createCanvas(window.innerWidth, window.innerHeight-10);
 	background(bgImg);
 	noStroke();
+	// Play ambient
+	bgSound.play();
+	bgSound.setLoop(true);
 	
 	// Define f
 	fSet();	// Create an image
@@ -116,12 +120,10 @@ var fObj = function(interactive) {
 // This needs to be called to actually printed out to the canvas
 fObj.prototype.draw = function() {
 	image(fImg, this.pX, this.pY);
-	if (this.ia) {
+	if (this.ia)
 		fill(255, 255, 250, 255);
-	}
-	else {
+	else
 		fill(198, 255, 0, 198);
-	}
 
 	ellipse(this.pX+fImg.width/2, this.pY+fImg.height/2,5);
 }
@@ -138,9 +140,15 @@ fObj.prototype.update = function() {
 		this.pX += (mouseX - this.pX - fImg.width/2) * e;
 		this.pY += (mouseY - this.pY - fImg.height/2) * e;
 		
-		// Add trail particle if position changed more than 10px
-		if (this.pX - mouseX)
-		{
+		// Run trail particle
+		for (let i = 0; i < this.trail.length; i++) {
+			trail[i].run();
+			// Add trail particle if position changed more than 10x10
+			if (abs(this.pX - tempX) && abs(this.pY - tempY))
+				this.trail.addP
+			// Destroy particle system done with animation
+			if (parti[i].particles.length == 0)
+				parti.splice(i, 1);
 		}
 	}
 
