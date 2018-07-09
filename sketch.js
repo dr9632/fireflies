@@ -12,10 +12,10 @@ var bgImg, bgSound;
 
 var fSize = 800;
 var fImg, f;
-var e = 0.01;
+var e = 0.03;
 
 var ff = [];
-var fCount = 10;
+var fCount = 20;
 var parti = [];
 var maxP = 20;
 

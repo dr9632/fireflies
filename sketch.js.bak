@@ -12,7 +12,7 @@ var bgImg, bgSound;
 
 var fSize = 800;
 var fImg, f;
-var e = 0.01;
+var e = 0.03;
 
 var ff = [];
 var fCount = 10;
@@ -141,8 +141,7 @@ fObj.prototype.update = function() {
 		this.pY += (mouseY - this.pY - fImg.height/2) * e;
 		
 		// Add trail particle if position changed more than 1x1
-		if ((abs(tempX-this.pX) > 1.5 && abs(tempY-this.pY) > 1.5 && this.trail.length == 0) ||
-			this.trail[this.trail.length-1].lifespan < 198) {
+		if (this.trail.length == 0 || this.trail[this.trail.length-1].lifespan < 198) {
 			let p = new particle(createVector(tempX+fImg.width/2, tempY+fImg.height/2));
 			this.trail.push(p);
 		}
