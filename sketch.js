@@ -8,6 +8,8 @@
 // https://p5js.org/examples/simulate-particle-system.html
 // https://p5js.org/examples/simulate-multiple-particle-systems.html
 
+var bgImg;
+
 var fSize = 800;
 var fImg, f;
 var e = 0.01;
@@ -15,12 +17,16 @@ var e = 0.01;
 var ff = [];
 var fCount = 10;
 var parti = [];
-var maxP = 30;
+var maxP = 20;
+
+function preload() {
+	bgImg = loadImage('assets/img/bg.jpg');
+}
 
 function setup() {
 	// Setup default canvas to fill up entire window & black
 	createCanvas(window.innerWidth, window.innerHeight-10);
-	background(0);
+	background(bgImg);
 	noStroke();
 	
 	// Define f
@@ -33,7 +39,7 @@ function setup() {
 
 function draw() {
 	// For each loop, background color should be consistent
-	background(0);
+	background(bgImg);
 	
 	// This is for mouse following fOgj
 	f.draw();
@@ -141,8 +147,15 @@ fObj.prototype.update = function() {
 // Define single particle
 var particle = function(pos) {
 	// y is set to 0.01 to evenly spread out the particle
-	this.acceleration = createVector(0, 0.01);
-	this.velocity = createVector(random(-1, 1), random(-1, 0));
+	//this.acceleration = createVector(0, 0.01);
+	//this.velocity = createVector(random(-1, 1), random(-1, 0));
+	
+	// Instead of gravity, trying to make 'floating' effect
+	// noise variation for positioning
+	this.noiseX = random() * 500;
+	this.noiseY = random() * 500;
+	this.noiseScale = random(0.001, 0.02);
+
 	this.position = pos.copy();
 	this.lifespan = 255;
 };
@@ -164,8 +177,14 @@ particle.prototype.draw = function() {
 
 // Update particle pos & lifespan
 particle.prototype.update = function() {
-	this.velocity.add(this.acceleration);
-	this.position.add(this.velocity);
+	//this.velocity.add(this.acceleration);
+	//this.position.add(this.velocity);
+
+	this.position.x += noise(this.noiseX)*4-1.86;
+	this.position.y += noise(this.noiseY)*4-1.86;
+
+	this.noiseX += this.noiseScale;
+	this.noiseY += this.noiseScale;
 	this.lifespan -= 2;
 }
 
