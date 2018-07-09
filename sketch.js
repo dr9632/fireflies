@@ -9,6 +9,7 @@
 // https://p5js.org/examples/simulate-multiple-particle-systems.html
 
 var bgImg, bgSound;
+var enabled = false;
 
 var fSize = 800;
 var fImg, f;
@@ -32,6 +33,7 @@ function setup() {
 	// Play ambient
 	bgSound.play();
 	bgSound.setLoop(true);
+	bgSound.setVolume(0.25);
 	
 	// Define f
 	fSet();	// Create an image
@@ -64,19 +66,39 @@ function draw() {
 		if (parti[i].particles.length == 0)
 			parti.splice(i, 1);
 	}
+
+	if (!enabled) {
+		// Overlay screen
+		fill(0, 0, 0, 148);
+		rect(0, 0, window.innerWidth, window.innerHeight);
+		
+		// Welcome text
+		fill(255,255,250, 255);
+		textSize(62);
+		var wel = 'Welcome!';
+		var welWidth = textWidth(wel);
+		text(wel, (width-welWidth)/2+30, height/2);
+	}
 }
 
 function windowResized() {
 	// When window is resized, resize the canvas & pass in the background color
 	resizeCanvas(window.innerWidth, window.innerHeight-10);
-	background(0);
+	background(bgImg);
 }
 
 // Throw some particles when clicked
-function mousePressed() {
+function mouseWheel() {
 	let c = color(random(198, 255), random(198, 255), random(193, 250));
 	this.p = new particleSys(createVector(f.pX + fImg.width/2, f.pY + fImg.height/2), c);
 	parti.push(p);
+}
+
+function doubleClicked() {
+	if (!enabled) {
+		enabled = true;
+		bgSound.setVolume(1, 2);
+	}
 }
 
 function fSet() {
@@ -152,6 +174,10 @@ fObj.prototype.update = function() {
 			if (this.trail[i].isDead())
 				this.trail.splice(i, 1);
 		}
+	}
+	if (mouseIsPressed) {
+		this.pX += (mouseX - this.pX - fImg.width/2) * e/2;
+		this.pY += (mouseY - this.pY - fImg.height/2) * e/2;
 	}
 
 	this.pX += noise(this.noiseX)*4-1.86;
