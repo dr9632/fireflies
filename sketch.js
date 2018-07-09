@@ -185,6 +185,7 @@ var particleSys = function (pos) {
 particleSys.prototype.addP = function () {
 	var p = new particle(this.origin);
 	this.particles.push(p);
+	this.pCount++;
 }
 
 // Run the system
@@ -192,7 +193,6 @@ particleSys.prototype.run = function () {
 	for (var i = this.particles.length - 1; i >= 0; i--) {
 		var p = this.particles[i];
 		p.run();
-		this.pCount++;
 		if (p.isDead())
 			this.particles.splice(i, 1);
 	}
