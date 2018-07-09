@@ -7,6 +7,6 @@ Ambient scenery with interactive fireflies
 * [Easing](https://processing.org/examples/easing.html) - for following mouse behavior
 * [Particle System](https://p5js.org/examples/simulate-particle-system.html)/[Multiple particle system](https://p5js.org/examples/simulate-multiple-particle-systems.html)
 
-### Assets source
+## Assets source
 * **Background image** - [Are we into the woods?](https://unsplash.com/photos/1L71sPT5XKc) by. Rosie Fraser
 * **Ambience** - [Crickets Night 2](https://freesound.org/people/PhilllChabbb/sounds/245834/) by. PhilllChabbb
