@@ -140,15 +140,18 @@ fObj.prototype.update = function() {
 		this.pX += (mouseX - this.pX - fImg.width/2) * e;
 		this.pY += (mouseY - this.pY - fImg.height/2) * e;
 		
+		// Add trail particle if position changed more than 1x1
+		if ((abs(tempX-this.pX) > 1.5 && abs(tempY-this.pY) > 1.5 && this.trail.length == 0) ||
+			this.trail[this.trail.length-1].lifespan < 198) {
+			let p = new particle(createVector(tempX+fImg.width/2, tempY+fImg.height/2));
+			this.trail.push(p);
+		}
 		// Run trail particle
 		for (let i = 0; i < this.trail.length; i++) {
-			trail[i].run();
-			// Add trail particle if position changed more than 10x10
-			if (if (abs(this.pX - tempX) && abs(this.pY - tempY))
-				this.trail.addP
-			// Destroy particle system done with animation
-			if (parti[i].particles.length == 0)
-				parti.splice(i, 1);
+			this.trail[i].run();
+			// Destroy particle done with animation
+			if (this.trail[i].isDead())
+				this.trail.splice(i, 1);
 		}
 	}
 
