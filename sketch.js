@@ -33,7 +33,7 @@ function setup() {
 	// Play ambient
 	bgSound.play();
 	bgSound.setLoop(true);
-	bgSound.setVolume(0.25);
+	bgSound.setVolume(0.15);
 	
 	// Define f
 	fSet();	// Create an image
@@ -73,31 +73,46 @@ function draw() {
 		rect(0, 0, window.innerWidth, window.innerHeight);
 		
 		// Welcome text
-		fill(255,255,250, 255);
-		textSize(62);
-		var wel = 'Welcome!';
-		var welWidth = textWidth(wel);
+		fill(255, 255, 250, 255);
+		textSize(64);
+		textFont("Covered By Your Grace");
+		let wel = 'Welcome to the Forest';
+		let welWidth = textWidth(wel);
 		text(wel, (width-welWidth)/2+30, height/2);
+
+		fill(255, 255, 250, 250);
+		textSize(47);
+		textFont("Chathura");
+		let inst = 'Hold left mouse button to gather all fireflies around the cursor.';
+		let instWidth = textWidth(inst);
+		text(inst, (width-instWidth)/2+30, height/2+75);
+		inst = 'Roll mouse wheel to sprinkle some fairy dusts.';
+		instWidth = textWidth(inst);
+		text(inst, (width-instWidth)/2+30, height/2+110);
+		inst = 'Double click the screen to enter the forest.';
+		instWidth = textWidth(inst);
+		text(inst, (width-instWidth)/2+30, height/2+145);
 	}
 }
 
+// Default behavior
 function windowResized() {
 	// When window is resized, resize the canvas & pass in the background color
 	resizeCanvas(window.innerWidth, window.innerHeight-10);
 	background(bgImg);
 }
 
-// Throw some particles when clicked
-function mouseWheel() {
-	let c = color(random(198, 255), random(198, 255), random(193, 250));
-	this.p = new particleSys(createVector(f.pX + fImg.width/2, f.pY + fImg.height/2), c);
-	parti.push(p);
+function doubleClicked() {
+	enabled = true;
+	bgSound.setVolume(1, 2);
 }
 
-function doubleClicked() {
-	if (!enabled) {
-		enabled = true;
-		bgSound.setVolume(1, 2);
+// Throw some particles when clicked
+function mouseWheel() {
+	if (enabled){
+		let c = color(random(198, 255), random(198, 255), random(193, 250));
+		this.p = new particleSys(createVector(f.pX + fImg.width/2, f.pY + fImg.height/2), c);
+		parti.push(p);
 	}
 }
 
@@ -154,7 +169,7 @@ fObj.prototype.draw = function() {
 // This needs to be called to update position
 // For animating fObj
 fObj.prototype.update = function() {
-	if (this.ia) {
+	if (this.ia && enabled) {
 		// Temporary vars
 		let tempX = this.pX;
 		let tempY = this.pY;
@@ -175,7 +190,7 @@ fObj.prototype.update = function() {
 				this.trail.splice(i, 1);
 		}
 	}
-	if (mouseIsPressed) {
+	if (mouseIsPressed && enabled) {
 		this.pX += (mouseX - this.pX - fImg.width/2) * e/2;
 		this.pY += (mouseY - this.pY - fImg.height/2) * e/2;
 	}
