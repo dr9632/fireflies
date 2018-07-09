@@ -17,7 +17,7 @@ var e = 0.03;
 var ff = [];
 var fCount = 20;
 var parti = [];
-var maxP = 20;
+var maxP = 15;
 
 function preload() {
 	bgImg = loadImage('assets/img/bg.jpg');
@@ -74,7 +74,8 @@ function windowResized() {
 
 // Throw some particles when clicked
 function mousePressed() {
-	this.p = new particleSys(createVector(f.pX + fImg.width/2, f.pY + fImg.height/2));
+	let c = color(random(198, 255), random(198, 255), random(193, 250));
+	this.p = new particleSys(createVector(f.pX + fImg.width/2, f.pY + fImg.height/2), c);
 	parti.push(p);
 }
 
@@ -139,10 +140,9 @@ fObj.prototype.update = function() {
 		// Repostion
 		this.pX += (mouseX - this.pX - fImg.width/2) * e;
 		this.pY += (mouseY - this.pY - fImg.height/2) * e;
-		
-		// Add trail particle if position changed more than 1x1
+
 		if (this.trail.length == 0 || this.trail[this.trail.length-1].lifespan < 198) {
-			let p = new particle(createVector(tempX+fImg.width/2, tempY+fImg.height/2));
+			let p = new particle(createVector(tempX+fImg.width/2, tempY+fImg.height/2), true);
 			this.trail.push(p);
 		}
 		// Run trail particle
@@ -168,7 +168,7 @@ fObj.prototype.update = function() {
 }
 
 // Define single particle
-var particle = function(pos) {
+var particle = function(pos, isTrail, c) {
 	// y is set to 0.01 to evenly spread out the particle
 	//this.acceleration = createVector(0, 0.01);
 	//this.velocity = createVector(random(-1, 1), random(-1, 0));
@@ -178,9 +178,15 @@ var particle = function(pos) {
 	this.noiseX = random() * 500;
 	this.noiseY = random() * 500;
 	this.noiseScale = random(0.001, 0.02);
+	if (!isTrail) {
+		this.colorR = c.levels[0];
+		this.colorG = c.levels[1];
+		this.colorB = c.levels[2];
+	}
 
 	this.position = pos.copy();
 	this.lifespan = 255;
+	this.isTrail = isTrail;
 };
 
 particle.prototype.run = function() {
@@ -190,12 +196,22 @@ particle.prototype.run = function() {
 
 // Display particles
 particle.prototype.draw = function() {
-	fill(255, 255, 250, this.lifespan);
-	ellipse(this.position.x, this.position.y, 2, 2);
-	fill(255, 225, 250, this.lifespan/2);
-	ellipse(this.position.x, this.position.y, 5, 5);
-	fill(255, 225, 250, this.lifespan/10);
-	ellipse(this.position.x, this.position.y, 12, 12);
+	if (!this.isTrail) {
+		fill(this.colorR, this.colorG, this.colorB, this.lifespan);
+		ellipse(this.position.x, this.position.y, 2, 2);
+		fill(this.colorR, this.colorG, this.colorB, this.lifespan/2);
+		ellipse(this.position.x, this.position.y, 5, 5);
+		fill(this.colorR, this.colorG, this.colorB, this.lifespan/10);
+		ellipse(this.position.x, this.position.y, 12, 12);
+	}
+	else {
+		fill(255, 255, 250, this.lifespan);
+		ellipse(this.position.x, this.position.y, 2, 2);
+		fill(255, 255, 250, this.lifespan/2);
+		ellipse(this.position.x, this.position.y, 5, 5);
+		fill(255, 255, 250, this.lifespan/10);
+		ellipse(this.position.x, this.position.y, 12, 12);
+	}
 }
 
 // Update particle pos & lifespan
@@ -205,6 +221,12 @@ particle.prototype.update = function() {
 
 	this.position.x += noise(this.noiseX)*4-1.86;
 	this.position.y += noise(this.noiseY)*4-1.86;
+
+	if (!this.isTrail) {
+		this.colorR += round(noise(this.noiseX)*4-0.93);
+		this.colorG += round(noise(this.noiseY)*4-0.93);
+		this.colorB += round(noise(this.noiseY)*4-0.93);
+	}
 
 	this.noiseX += this.noiseScale;
 	this.noiseY += this.noiseScale;
@@ -217,15 +239,16 @@ particle.prototype.isDead = function () {
 }
 
 // Define single particle system
-var particleSys = function (pos) {
+var particleSys = function (pos, c) {
 	this.origin = pos.copy();
+	this.color = c;
 	this.pCount = 0;
 	this.particles = [];
 };
 
 // Add particle into the system
 particleSys.prototype.addP = function () {
-	let p = new particle(this.origin);
+	let p = new particle(this.origin, false, this.color);
 	this.particles.push(p);
 	this.pCount++;
 }
