@@ -16,7 +16,7 @@ var fImg, f;
 var e = 0.03;
 
 var ff = [];
-var fCount = 20;
+var fCount = 25;
 var parti = [];
 var maxP = 15;
 
