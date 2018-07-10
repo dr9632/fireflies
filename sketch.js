@@ -169,30 +169,42 @@ fObj.prototype.draw = function() {
 // This needs to be called to update position
 // For animating fObj
 fObj.prototype.update = function() {
-	if (this.ia && enabled) {
-		// Temporary vars
-		let tempX = this.pX;
-		let tempY = this.pY;
+	if (enabled) {
+		// Interactive fObj always follows the cursor
+		if (this.ia) {
+			// Temporary vars
+			let tempX = this.pX;
+			let tempY = this.pY;
 
-		// Repostion
-		this.pX += (mouseX - this.pX - fImg.width/2) * e;
-		this.pY += (mouseY - this.pY - fImg.height/2) * e;
+			// Repostion
+			this.pX += (mouseX - this.pX - fImg.width/2) * e;
+			this.pY += (mouseY - this.pY - fImg.height/2) * e;
 
-		if (this.trail.length == 0 || this.trail[this.trail.length-1].lifespan < 198) {
-			let p = new particle(createVector(tempX+fImg.width/2, tempY+fImg.height/2), true);
-			this.trail.push(p);
+			if (this.trail.length == 0 || this.trail[this.trail.length-1].lifespan < 198) {
+				let p = new particle(createVector(tempX+fImg.width/2, tempY+fImg.height/2), true);
+				this.trail.push(p);
+			}
+			// Run trail particle
+			for (let i = 0; i < this.trail.length; i++) {
+				this.trail[i].run();
+				// Destroy particle done with animation
+				if (this.trail[i].isDead())
+					this.trail.splice(i, 1);
+			}
 		}
-		// Run trail particle
-		for (let i = 0; i < this.trail.length; i++) {
-			this.trail[i].run();
-			// Destroy particle done with animation
-			if (this.trail[i].isDead())
-				this.trail.splice(i, 1);
+
+		// Gather all fObj to cursor
+		if (mouseIsPressed) {
+			this.pX += (mouseX - this.pX - fImg.width/2) * e/2;
+			this.pY += (mouseY - this.pY - fImg.height/2) * e/2;
 		}
-	}
-	if (mouseIsPressed && enabled) {
-		this.pX += (mouseX - this.pX - fImg.width/2) * e/2;
-		this.pY += (mouseY - this.pY - fImg.height/2) * e/2;
+
+		// On default state, avoid cursor
+		if (!this.ia && !mouseIsPressed &&
+			abs(this.pX-f.pX) < 50 && abs(this.pY-f.pY) < 50) {
+			this.pX += 50 * e/2;
+			this.pY += 50 * e/2;
+		}
 	}
 
 	this.pX += noise(this.noiseX)*4-1.86;
@@ -210,12 +222,7 @@ fObj.prototype.update = function() {
 
 // Define single particle
 var particle = function(pos, isTrail, c) {
-	// y is set to 0.01 to evenly spread out the particle
-	//this.acceleration = createVector(0, 0.01);
-	//this.velocity = createVector(random(-1, 1), random(-1, 0));
-	
-	// Instead of gravity, trying to make 'floating' effect
-	// noise variation for positioning
+	// Noise variation for positioning
 	this.noiseX = random() * 500;
 	this.noiseY = random() * 500;
 	this.noiseScale = random(0.001, 0.02);
@@ -257,9 +264,6 @@ particle.prototype.draw = function() {
 
 // Update particle pos & lifespan
 particle.prototype.update = function() {
-	//this.velocity.add(this.acceleration);
-	//this.position.add(this.velocity);
-
 	this.position.x += noise(this.noiseX)*4-1.86;
 	this.position.y += noise(this.noiseY)*4-1.86;
 
