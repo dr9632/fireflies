@@ -12,13 +12,14 @@
 // http://coursescript.com/notes/interactivecomputing/interactivity/
 
 // Setup ambient
-var bgImg, bgSound;
+var bgImg, bgSound, bgm;
 var enabled = false;
 // Setup controls
 var menu = false;
 var fSlider;
 var bgChk = true;
 var fsChk = true;
+var musChk = false;
 
 var fSize = 800;
 var fImg, f, fSound;
@@ -32,6 +33,7 @@ var maxP = 15;
 function preload() {
 	bgImg = loadImage('assets/img/bg.jpg');
 	bgSound = loadSound('assets/audio/amb.mp3');
+	bgm = loadSound('assets/audio/bgm.mp3');
 	fSound = loadSound('assets/audio/fs.mp3');
 }
 
@@ -44,6 +46,9 @@ function setup() {
 	bgSound.play();
 	bgSound.setLoop(true);
 	bgSound.setVolume(0.15);
+
+	// BGM settings
+	bgm.setLoop(true);
 	
 	// Define f
 	fSet();	// Create an image
@@ -146,6 +151,27 @@ function draw() {
 		fill(255, 255, 250, 200);
 		label = 'Chime';
 		text(label, 142, 58);
+
+		// musCheckbox
+		if (ischkHover(226, 51)){
+			fill(255, 255 , 250, 168);
+			rect(219, 44, 14, 14);
+			fill(255, 255 , 250, 48);
+			rect(217, 42, 18, 18);
+			fill(255, 255 , 250, 12);
+			rect(214, 39, 24, 24);
+		}
+		if (musChk) 
+			fill(198, 220, 100);
+		else
+			fill(98, 98, 98);
+		rect(220, 45, 12, 12);
+
+		// fsCheckbox label
+		fill(255, 255, 250, 200);
+		textSize(18);
+		label = '\u266C';
+		text(label, 242, 58);
 		
 		// menu close btn
 		if (isMenuHover(menu)) {
@@ -283,6 +309,11 @@ function mousePressed() {
 	// fsCheckbox
 	else if (ischkHover(126, 51))
 		fsChk = !fsChk;
+	else if(ischkHover(226, 51)) {
+		musChk = !musChk;
+		if (musChk) bgm.play();
+		else bgm.stop();
+	}
 	else if (enabled){
 		let c = color(random(198, 255), random(198, 255), random(193, 250));
 		this.p = new particleSys(createVector(f.pX + fImg.width/2, f.pY + fImg.height/2), c);
