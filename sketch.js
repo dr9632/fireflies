@@ -58,7 +58,7 @@ function setup() {
 	// Slider: ff num control
 	fSlider = createSlider(5, 50, fCount);
 	fSlider.position(10, 10);
-	//fSlider.hide();
+	fSlider.hide();
 }
 
 function draw() {
@@ -86,6 +86,108 @@ function draw() {
 			parti.splice(i, 1);
 	}
 
+	// If menu is on
+	if (menu){
+		// Slider label
+		fill(255, 255, 250, 200);
+		textSize(32);
+		textFont("Chathura");
+		var label = 'Num. of Fireflies: ' + fCount;
+		text(label, 155, 27);
+		// If slider val increases create more fObjs
+		if (fCount < fSlider.value()) {
+			for (let i = fCount; i < fSlider.value(); i++)
+				ff[i] = new fObj(false);
+		}
+		// If slider val decreases destroy fObjs
+		if (fCount > fSlider.value())
+			ff.splice(fSlider.value(), fCount-fSlider.value());
+		// Reset fCount val
+		fCount = fSlider.value();
+		
+		// bgCheckbox
+		if (ischkHover(16, 51)){
+			fill(255, 255 , 250, 168);
+			rect(9, 44, 14, 14);
+			fill(255, 255 , 250, 48);
+			rect(7, 42, 18, 18);
+			fill(255, 255 , 250, 12);
+			rect(4, 39, 24, 24);
+		}
+		if (bgChk) 
+			fill(198, 220, 100);
+		else
+			fill(98, 98, 98);
+		rect(10, 45, 12, 12);
+
+		// bgCheckbox label
+		fill(255, 255, 250, 200);
+		textSize(32);
+		textFont("Chathura");
+		label = 'Ambient';
+		text(label, 32, 58);
+
+		// fsCheckbox
+		if (ischkHover(126, 51)){
+			fill(255, 255 , 250, 168);
+			rect(119, 44, 14, 14);
+			fill(255, 255 , 250, 48);
+			rect(117, 42, 18, 18);
+			fill(255, 255 , 250, 12);
+			rect(114, 39, 24, 24);
+		}
+		if (fsChk) 
+			fill(198, 220, 100);
+		else
+			fill(98, 98, 98);
+		rect(120, 45, 12, 12);
+
+		// fsCheckbox label
+		fill(255, 255, 250, 200);
+		label = 'Chime';
+		text(label, 142, 58);
+		
+		// menu close btn
+		if (isMenuHover(menu)) {
+			fill(255, 255 , 250, 48);
+			rect(281, 44, 18, 18);
+			fill(255, 255 , 250, 12);
+			rect(278, 41, 24, 24);
+		}
+		fill(255, 255, 250,168);
+		rect(283, 46, 14, 14);
+		fill(98, 98, 98);
+		rect(284, 47, 12, 12);
+
+		// menu close label
+		fill(255, 255, 250, 200);
+		textSize(24);
+		label = 'X';
+		text(label, 286.5, 58);
+	}
+	else {	// If menu is off
+		if (isMenuHover(menu)){
+			fill(255, 255 , 250, 48);
+			ellipse(25, 25, 33, 33);
+			fill(255, 255 , 250, 12);
+			ellipse(25, 25, 41, 41);
+		}
+		fill(255, 255, 250);
+		ellipse(25, 25, 30, 30);
+		fill(98, 98, 98);
+		ellipse(25, 25, 29, 29);
+		fill(255, 255, 250);
+		rect(17, 17.5, 7, 7);
+		rect(26.5, 17.5, 7, 7);
+		rect(17, 27, 7, 7);
+		rect(26.5, 27, 7, 7);
+		fill(98, 98, 98);
+		rect(18, 18, 5, 5);
+		rect(27.5, 18, 5, 5);
+		rect(18, 28, 5, 5);
+		rect(27.5, 28, 5, 5);
+	}
+
 	if (!enabled) {
 		// Overlay screen
 		fill(0, 0, 0, 148);
@@ -102,77 +204,16 @@ function draw() {
 		fill(255, 255, 250, 250);
 		textSize(47);
 		textFont("Chathura");
-		let inst = 'Hold left mouse button to gather all fireflies around the cursor.';
+		let inst = 'Click to sprinkle some fairy dusts.';
 		let instWidth = textWidth(inst);
 		text(inst, (width-instWidth)/2+30, height/2+75);
-		inst = 'Roll mouse wheel to sprinkle some fairy dusts.';
+		inst = 'Roll mouse wheel to gather or spread fireflies.';
 		instWidth = textWidth(inst);
 		text(inst, (width-instWidth)/2+30, height/2+110);
 		inst = 'Double click the screen to enter the forest.';
 		instWidth = textWidth(inst);
 		text(inst, (width-instWidth)/2+30, height/2+145);
 	}
-
-	// Slider label
-	fill(255, 255, 250, 200);
-	textSize(32);
-	textFont("Chathura");
-	var label = 'Num. of Fireflies: ' + fCount;
-	text(label, 155, 27);
-	// If slider val increases create more fObjs
-	if (fCount < fSlider.value()) {
-		for (let i = fCount; i < fSlider.value(); i++)
-			ff[i] = new fObj(false);
-	}
-	// If slider val decreases destroy fObjs
-	if (fCount > fSlider.value())
-		ff.splice(fSlider.value(), fCount-fSlider.value());
-	// Reset fCount val
-	fCount = fSlider.value();
-	
-	// bgCheckbox
-	if (ischkHover(16, 51)){
-		fill(255, 255 , 250, 168);
-		rect(9, 44, 14, 14);
-		fill(255, 255 , 250, 48);
-		rect(7, 42, 18, 18);
-		fill(255, 255 , 250, 12);
-		rect(4, 39, 24, 24);
-	}
-	if (bgChk) 
-		fill(198, 220, 100);
-	else
-		fill(98, 98, 98);
-	rect(10, 45, 12, 12);
-
-	// bgCheckbox label
-	fill(255, 255, 250, 200);
-	textSize(32);
-	textFont("Chathura");
-	label = 'Ambient';
-	text(label, 32, 58);
-
-	// fsCheckbox
-	if (ischkHover(126, 51)){
-		fill(255, 255 , 250, 168);
-		rect(119, 44, 14, 14);
-		fill(255, 255 , 250, 48);
-		rect(117, 42, 18, 18);
-		fill(255, 255 , 250, 12);
-		rect(114, 39, 24, 24);
-	}
-	if (fsChk) 
-		fill(198, 220, 100);
-	else
-		fill(98, 98, 98);
-	rect(120, 45, 12, 12);
-
-	// bgCheckbox label
-	fill(255, 255, 250, 200);
-	textSize(32);
-	textFont("Chathura");
-	label = 'Chime';
-	text(label, 142, 58);
 }
 
 function windowResized() {
@@ -188,16 +229,33 @@ function doubleClicked() {
 }
 
 // Throw some particles when wheel roll
-function mouseWheel() {
+function mouseWheel(event) {
 	if (enabled){
-		let c = color(random(198, 255), random(198, 255), random(193, 250));
-		this.p = new particleSys(createVector(f.pX + fImg.width/2, f.pY + fImg.height/2), c);
-		parti.push(p);
+		// Gather all fObj to cursor
+		if (event.delta > 0) {
+			for (let i = 0; i < fCount; i++) {
+				ff[i].draw();
+				ff[i].update(false);
+				ff[i].hover();
+			}
+		}
+		// Spread all fObj away from cursor
+		if (event.delta < 0){
+			for (let i = 0; i < fCount; i++) {
+				ff[i].draw();
+				ff[i].update(true);
+				ff[i].hover();
+			}
+		}
 	}
 }
 
-function isMenuHover() {
-	return;
+function isMenuHover(open) {
+	if (open)
+		return dist(mouseX, mouseY, 290, 53) < 12;
+	if (!open && enabled)
+		return dist(mouseX, mouseY, 25, 25) < 15;
+	return false;
 }
 
 function ischkHover(pX, pY) {
@@ -206,18 +264,30 @@ function ischkHover(pX, pY) {
 
 // Menu interactivity
 function mousePressed() {
-	if (isMenuHover()){
-		menu = !menu;
+	// Menu open/close
+	if (isMenuHover(false) && !menu) {
+		fSlider.show();
+		menu = true;
 	}
+	else if (isMenuHover(true) && menu) {
+		fSlider.hide();
+		menu = false;
+	}
+
 	// bgCheckbox
-	if (ischkHover(16, 51)){
+	else if (ischkHover(16, 51)){
 		bgChk = !bgChk;
 		if (bgChk) bgSound.play();
 		else bgSound.stop();
 	}
 	// fsCheckbox
-	if (ischkHover(126, 51))
+	else if (ischkHover(126, 51))
 		fsChk = !fsChk;
+	else if (enabled){
+		let c = color(random(198, 255), random(198, 255), random(193, 250));
+		this.p = new particleSys(createVector(f.pX + fImg.width/2, f.pY + fImg.height/2), c);
+		parti.push(p);
+	}
 }
 
 function fSet() {
@@ -274,7 +344,7 @@ fObj.prototype.draw = function() {
 
 // This needs to be called to update position
 // For animating fObj
-fObj.prototype.update = function() {
+fObj.prototype.update = function(pos) {
 	if (enabled) {
 		// Interactive fObj always follows the cursor
 		if (this.ia) {
@@ -300,14 +370,17 @@ fObj.prototype.update = function() {
 		}
 
 		// Gather all fObj to cursor
-		if (mouseIsPressed) {
+		if (pos) {
 			this.pX += (mouseX - this.pX - fImg.width/2) * e/2;
 			this.pY += (mouseY - this.pY - fImg.height/2) * e/2;
 		}
+		if (pos == false) {
+			this.pX -= (mouseX - this.pX - fImg.width/2) * e/2;
+			this.pY -= (mouseY - this.pY - fImg.height/2) * e/2;
+		}
 
 		// On default state, avoid cursor
-		if (!this.ia && !mouseIsPressed &&
-			abs(this.pX-f.pX) < 50 && abs(this.pY-f.pY) < 50) {
+		if (!this.ia &&	abs(this.pX-f.pX) < 50 && abs(this.pY-f.pY) < 50) {
 			this.pX += 50 * e/2;
 			this.pY += 50 * e/2;
 		}
