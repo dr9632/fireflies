@@ -10,3 +10,4 @@ Ambient scenery with interactive fireflies
 ## Assets source
 * **Background image** - [Are we into the woods?](https://unsplash.com/photos/1L71sPT5XKc) by. Rosie Fraser
 * **Ambience** - [Crickets Night 2](https://freesound.org/people/PhilllChabbb/sounds/245834/) by. PhilllChabbb
+* **Chime SE** - [Single Chime or Triangle Hit](http://www.freesfx.co.uk/sfx/chime)

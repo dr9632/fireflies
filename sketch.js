@@ -12,7 +12,7 @@ var bgImg, bgSound;
 var enabled = false;
 
 var fSize = 800;
-var fImg, f;
+var fImg, f, fSound;
 var e = 0.03;
 
 var ff = [];
@@ -23,6 +23,7 @@ var maxP = 15;
 function preload() {
 	bgImg = loadImage('assets/img/bg.jpg');
 	bgSound = loadSound('assets/audio/amb.mp3');
+	fSound = loadSound('assets/audio/fs.mp3');
 }
 
 function setup() {
@@ -41,6 +42,9 @@ function setup() {
 
 	for (let i = 0; i < fCount; i++)
 		ff[i] = new fObj(false);
+
+	// Set volume for fSound
+	fSound.setVolume(0.3);
 }
 
 function draw() {
@@ -55,6 +59,7 @@ function draw() {
 	for (let i = 0; i < fCount; i++) {
 		ff[i].draw();
 		ff[i].update();
+		ff[i].hover();
 	}
 	
 	// If particle systems exist, run it
@@ -145,6 +150,8 @@ var fObj = function(interactive) {
 	else {
 		this.pX = random(0-fImg.width/2, width-fImg.width/2);
 	    this.pY = random(0-fImg.height/2, height-fImg.height/2);
+
+		this.rate = random(0.5,2);
 	}
 
 	this.noiseX = random()*1000;
@@ -218,6 +225,14 @@ fObj.prototype.update = function() {
 
     this.noiseX += this.noiseScale;
     this.noiseY += this.noiseScale;
+}
+
+fObj.prototype.hover = function () {
+	if (dist(f.pX, f.pY, this.pX, this.pY) < 5) {
+		fSound.rate(this.rate);
+		fSound.play();
+		this.rate = random(0.5,2);
+	}
 }
 
 // Define single particle
