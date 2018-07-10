@@ -5,7 +5,8 @@ Ambient scenery with interactive fireflies
 * [p5.js](https://p5js.org/) - Framework
 * [Glow effect in p5.js](https://infosmith.biz/blog/it/p5js-blur-glow)
 * [Easing](https://processing.org/examples/easing.html) - for following mouse behavior
-* [Particle System](https://p5js.org/examples/simulate-particle-system.html)/[Multiple particle system](https://p5js.org/examples/simulate-multiple-particle-systems.html)
+* [Particle System](https://p5js.org/examples/simulate-particle-system.html) / [Multiple particle system](https://p5js.org/examples/simulate-multiple-particle-systems.html)
+* [Basic Interactivity with p5.js](http://coursescript.com/notes/interactivecomputing/interactivity/)
 
 ## Assets source
 * **Background image** - [Are we into the woods?](https://unsplash.com/photos/1L71sPT5XKc) by. Rosie Fraser

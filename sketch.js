@@ -7,9 +7,18 @@
 // Particle system:
 // https://p5js.org/examples/simulate-particle-system.html
 // https://p5js.org/examples/simulate-multiple-particle-systems.html
+//
+// Interactive slider:
+// http://coursescript.com/notes/interactivecomputing/interactivity/
 
+// Setup ambient
 var bgImg, bgSound;
 var enabled = false;
+// Setup controls
+var menu = false;
+var fSlider;
+var bgChk = true;
+var fsChk = true;
 
 var fSize = 800;
 var fImg, f, fSound;
@@ -45,6 +54,11 @@ function setup() {
 
 	// Set volume for fSound
 	fSound.setVolume(0.3);
+
+	// Slider: ff num control
+	fSlider = createSlider(5, 50, fCount);
+	fSlider.position(10, 10);
+	//fSlider.hide();
 }
 
 function draw() {
@@ -98,27 +112,112 @@ function draw() {
 		instWidth = textWidth(inst);
 		text(inst, (width-instWidth)/2+30, height/2+145);
 	}
+
+	// Slider label
+	fill(255, 255, 250, 200);
+	textSize(32);
+	textFont("Chathura");
+	var label = 'Num. of Fireflies: ' + fCount;
+	text(label, 155, 27);
+	// If slider val increases create more fObjs
+	if (fCount < fSlider.value()) {
+		for (let i = fCount; i < fSlider.value(); i++)
+			ff[i] = new fObj(false);
+	}
+	// If slider val decreases destroy fObjs
+	if (fCount > fSlider.value())
+		ff.splice(fSlider.value(), fCount-fSlider.value());
+	// Reset fCount val
+	fCount = fSlider.value();
+	
+	// bgCheckbox
+	if (ischkHover(16, 51)){
+		fill(255, 255 , 250, 168);
+		rect(9, 44, 14, 14);
+		fill(255, 255 , 250, 48);
+		rect(7, 42, 18, 18);
+		fill(255, 255 , 250, 12);
+		rect(4, 39, 24, 24);
+	}
+	if (bgChk) 
+		fill(198, 220, 100);
+	else
+		fill(98, 98, 98);
+	rect(10, 45, 12, 12);
+
+	// bgCheckbox label
+	fill(255, 255, 250, 200);
+	textSize(32);
+	textFont("Chathura");
+	label = 'Ambient';
+	text(label, 32, 58);
+
+	// fsCheckbox
+	if (ischkHover(126, 51)){
+		fill(255, 255 , 250, 168);
+		rect(119, 44, 14, 14);
+		fill(255, 255 , 250, 48);
+		rect(117, 42, 18, 18);
+		fill(255, 255 , 250, 12);
+		rect(114, 39, 24, 24);
+	}
+	if (fsChk) 
+		fill(198, 220, 100);
+	else
+		fill(98, 98, 98);
+	rect(120, 45, 12, 12);
+
+	// bgCheckbox label
+	fill(255, 255, 250, 200);
+	textSize(32);
+	textFont("Chathura");
+	label = 'Chime';
+	text(label, 142, 58);
 }
 
-// Default behavior
 function windowResized() {
 	// When window is resized, resize the canvas & pass in the background color
 	resizeCanvas(window.innerWidth, window.innerHeight-10);
 	background(bgImg);
 }
 
+// Exit wait screen
 function doubleClicked() {
 	enabled = true;
 	bgSound.setVolume(1, 2);
 }
 
-// Throw some particles when clicked
+// Throw some particles when wheel roll
 function mouseWheel() {
 	if (enabled){
 		let c = color(random(198, 255), random(198, 255), random(193, 250));
 		this.p = new particleSys(createVector(f.pX + fImg.width/2, f.pY + fImg.height/2), c);
 		parti.push(p);
 	}
+}
+
+function isMenuHover() {
+	return;
+}
+
+function ischkHover(pX, pY) {
+	return dist(mouseX, mouseY, pX, pY) < 12;
+}
+
+// Menu interactivity
+function mousePressed() {
+	if (isMenuHover()){
+		menu = !menu;
+	}
+	// bgCheckbox
+	if (ischkHover(16, 51)){
+		bgChk = !bgChk;
+		if (bgChk) bgSound.play();
+		else bgSound.stop();
+	}
+	// fsCheckbox
+	if (ischkHover(126, 51))
+		fsChk = !fsChk;
 }
 
 function fSet() {
@@ -228,7 +327,7 @@ fObj.prototype.update = function() {
 }
 
 fObj.prototype.hover = function () {
-	if (dist(f.pX, f.pY, this.pX, this.pY) < 5) {
+	if (dist(f.pX, f.pY, this.pX, this.pY) < 5 && enabled && fsChk) {
 		fSound.rate(this.rate);
 		fSound.play();
 		this.rate = random(0.5,2);
