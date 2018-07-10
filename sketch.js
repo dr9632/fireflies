@@ -46,9 +46,11 @@ function setup() {
 	bgSound.play();
 	bgSound.setLoop(true);
 	bgSound.setVolume(0.15);
+	bgSound.playMode('sustain');
 
 	// BGM settings
 	bgm.setLoop(true);
+	bgm.playMode('sustain');
 	
 	// Define f
 	fSet();	// Create an image
